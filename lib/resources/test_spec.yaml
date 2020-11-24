@@ -15,6 +15,7 @@ phases:
       # - ln -s /usr/local/avm/versions/$APPIUM_VERSION/node_modules/.bin/appium  /usr/local/avm/versions/$APPIUM_VERSION/node_modules/appium/bin/appium.js
 
       # enter flutter app directory in Appium bundle
+      - ls
       - cd flutter_app
       - ls -la
 
@@ -29,7 +30,7 @@ phases:
 
       # install flutter
       - echo "Install flutter"
-      - FLUTTER_VERSION='v1.12.13+hotfix.8-stable'
+      - FLUTTER_VERSION='1.22.4-stable'
       - >-
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
