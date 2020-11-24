@@ -16,6 +16,18 @@ phases:
 
       # enter flutter app directory in Appium bundle
       - ls
+      - cd bin
+      - ls
+      - cd ..
+      - cd local
+      - ls
+      - cd ..
+      - cd tests
+      - ls
+      - cd ..
+      - cd include
+      - ls
+      - cd ..
       - cd flutter_app
       - ls -la
 
@@ -86,15 +98,12 @@ phases:
       # and installed required libraries. You can run your test under $DEVICEFARM_TEST_PACKAGE_PATH
       - echo "Navigate to test package directory"
       - cd $DEVICEFARM_TEST_PACKAGE_PATH
+      - ls
       - echo "Start Flutter integration test"
-      # By default, the following command is used by Device Farm to run your Appium Python test.
-      # The goal is to run all your tests files in the test package.
-      # Alternatively, You may specify your customized command.
-      # Note: For most use cases, the default command works fine.
-      # Please refer "https://docs.pytest.org/en/latest/usage.html" for more options on running pytests from command line.
-      # - bin/py.test tests/ --junit-xml $DEVICEFARM_LOG_DIR/junitreport.xml
       - cd flutter_app
-      - rm -f .packages # todo: remove from bundle
+      - ls
+      - rm -f .packages
+      - ls
       - MAIN=test_driver/main.dart
       - TESTS='test_driver/main_test.dart'
       - >-
