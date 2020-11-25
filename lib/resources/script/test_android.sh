@@ -61,12 +61,11 @@ where:
 }
 
 run_tests() {
-	echo "Bunu yazan tosun"
+  echo "Bunu yazan tosun"
   local test_paths=$1 # comma-delimited list of test paths
 
   while IFS=',' read -ra tests; do # parse comma-delimited list into real list of [tests]
     for test in "${tests[@]}"; do
-#        custom_test_runner "$test" "$2" "$3"
         custom_test_runner "$test"
     done
   done <<< "$test_paths"
