@@ -8,6 +8,7 @@ set -e
 #set -x
 
 main() {
+	echo "geldim gordum"
   case $1 in
     --help)
         show_help
@@ -33,6 +34,7 @@ main() {
         show_help
         ;;
   esac
+  echo "case'i kirdim"
 }
 
 show_help() {
@@ -59,6 +61,7 @@ where:
 }
 
 run_tests() {
+	echo "Bunu yazan tosun"
   local test_paths=$1 # comma-delimited list of test paths
 
   while IFS=',' read -ra tests; do # parse comma-delimited list into real list of [tests]
