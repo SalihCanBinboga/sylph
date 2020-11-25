@@ -21,6 +21,8 @@ phases:
       - bash --version
       
       - echo "DEVICEFARM_APP_PATH=${DEVICEFARM_APP_PATH}"
+      
+      - sudo apt install dos2unix
 
       # install flutter
       - echo "Install flutter"
@@ -100,7 +102,8 @@ phases:
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
           cd script
-          ./test_android.sh --run-tests "$TESTS"
+          dos2unix test_android.sh
+          bash test_android.sh --run-tests "$TESTS"
           cd ..
           track_test_phase_status
         fi

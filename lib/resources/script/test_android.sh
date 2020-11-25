@@ -1,5 +1,5 @@
 #!/bin/bash
-# set -e
+set -e
 
 main() {
   case $1 in
