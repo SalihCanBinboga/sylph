@@ -16,6 +16,9 @@ phases:
 
       # enter flutter app directory in Appium bundle
       - ls -la
+      - pwd
+      - cd bin
+      - ls -la
       - cd flutter_app
       - ls -la
       - bash --version
