@@ -105,12 +105,16 @@ phases:
       - rm -f .packages
       - ls
       - cd script
+      - ls -l demo.sh
+      - chmod +x test_android.sh
+      - ls -l demo.sh
+      - cd ..
       - MAIN=test_driver/main.dart
       - TESTS='test_driver/main_test.dart'
       - >-
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
-          ./test_android.sh --run-tests "$TESTS"
+          ./script/test_android.sh --run-tests "$TESTS"
           track_test_phase_status
         fi
 
