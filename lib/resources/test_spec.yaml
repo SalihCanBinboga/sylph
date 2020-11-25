@@ -100,7 +100,7 @@ phases:
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
           cd script
-          shell test_android.sh --run-tests "$TESTS"
+          sh test_android.sh --run-tests "$TESTS"
           cd ..
           track_test_phase_status
         fi
