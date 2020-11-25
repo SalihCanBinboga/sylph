@@ -96,7 +96,13 @@ phases:
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
           echo "ebemi"
-          ./script/test_android.sh --run-tests "$TESTS"
+          start ./script/test_android.sh --run-tests "$TESTS"
+          echo "run"
+          run ./script/test_android.sh --run-tests "$TESTS"
+          echo "sh"
+          sh ./script/test_android.sh --run-tests "$TESTS"
+          echo "bash"
+          bash ./script/test_android.sh --run-tests "$TESTS"
           track_test_phase_status
           echo "seviyorum"
         fi
