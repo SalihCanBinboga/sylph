@@ -1,12 +1,12 @@
 #!/bin/bash
 # Originally written by Maurice McCabe <mmcc007@gmail.com>, but placed in the public domain.
-#
+
 # Run Flutter integration tests on android device (or emulator)
-#
+
 # exit on error
 #set -e
-#set -x
-#
+
+
 main() {
 	echo "geldim gordum"
   case $1 in

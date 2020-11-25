@@ -59,11 +59,6 @@ phases:
   # The test phase includes commands that run your test suite execution.
   test:
     commands:
-      # Report status of each command exit code.
-      # Use last failing command exit code as test phase exit code
-      # or
-      # if no command failed, exit test phase normally.
-      # (this is required because test phase does not track a failed command correctly.
       - TEST_PHASE_STATUS=0 # success
       - >-
         track_test_phase_status() {
@@ -77,8 +72,7 @@ phases:
         set_test_phase_exit_code() {
           return $TEST_PHASE_STATUS
         }
-        
-      - >-
+		
         custom_test_runner() {
 		  echo "custom_test_runner start in"
           local test_path='test_driver/main_test.dart'
@@ -101,11 +95,11 @@ phases:
           obs_port_str=$(echo "$obs_str" | grep -Eo '[^:]*$')
           obs_port=$(echo "$obs_port_str" | grep -Eo '^[0-9]+')
           obs_token=$(echo "$obs_port_str" | grep -Eo '\/.*\/$')
-          echo Observatory on port "$obs_port"
+          echo "Observatory on port $obs_port"
 
           port_forwarded=$(adb forward --list| grep ${forwarded_port}) || true
           if [[ ! "$port_forwarded" == "" ]]; then
-            echo "unforwarding ${forwarded_port}"
+            echo "unforwarding $forwarded_port"
             adb forward --remove tcp:${forwarded_port}
           fi
 
@@ -114,7 +108,7 @@ phases:
           else
             adb forward tcp:"$forwarded_port" tcp:"$obs_port" # if running locally
           fi
-          echo Local port "$forwarded_port" forwarded to observatory port "$obs_port"
+          echo "Local port $forwarded_port forwarded to observatory port $obs_port"
 
           echo "Running integration test $test_path on app $app_id ..."
           export VM_SERVICE_URL=http://127.0.0.1:"$forwarded_port$obs_token"
@@ -122,9 +116,7 @@ phases:
 		  echo "custom_test_runner start out"
         }
 
-      # Your test package is downloaded in $DEVICEFARM_TEST_PACKAGE_PATH so we first change directory to that path.
-      # We already setup python virtual environment on $DEVICEFARM_TEST_PACKAGE_PATH
-      # and installed required libraries. You can run your test under $DEVICEFARM_TEST_PACKAGE_PATH
+
       - echo "Navigate to test package directory"
       - cd $DEVICEFARM_TEST_PACKAGE_PATH
       - ls -la
