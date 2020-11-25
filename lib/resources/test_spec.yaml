@@ -22,7 +22,7 @@ phases:
       
       - echo "DEVICEFARM_APP_PATH=${DEVICEFARM_APP_PATH}"
       
-      - sudo apt install dos2unix
+      - sudo -n apt install dos2unix
 
       # install flutter
       - echo "Install flutter"
