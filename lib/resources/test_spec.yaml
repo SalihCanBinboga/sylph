@@ -106,7 +106,7 @@ phases:
       - ls
       - rm -f .packages
       - cd script
-      - chmod +x test_android.sh
+      - echo "${DIR}"
       - cd ..
       - MAIN=test_driver/main.dart
       - TESTS='test_driver/main_test.dart'
