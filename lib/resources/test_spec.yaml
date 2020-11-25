@@ -5,6 +5,8 @@ phases:
     commands:
       - cd flutter_app
       - ls -la
+      
+      - bash --version
 
       - echo "DEVICEFARM_APP_PATH=$DEVICEFARM_APP_PATH"
 
