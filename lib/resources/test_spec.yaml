@@ -77,56 +77,38 @@ phases:
         set_test_phase_exit_code() {
           return $TEST_PHASE_STATUS
         }
-      # - >-
-        # run_tests() {
-          # echo "Bunu yazan tosun"
-          # local test_paths='test_driver/main_test.dart'
-
-          # while IFS=',' read -ra tests; do
-            # for test in "${tests[@]}"; do
-                # custom_test_runner "$test"
-            # done
-          # done <<< "$test_paths"
-        # }
         
       - >-
         custom_test_runner() {
+		  echo "custom_test_runner start in"
           local test_path='test_driver/main_test.dart'
           local forwarded_port=4723
 
           local app_id
-          app_id=$(grep applicationId android/app/build.gradle | awk '{print $2}' | tr -d '"')
+          app_id=$(grep applicationId android/app/build.gradle | awk '' | tr -d '"')
 
           echo "Starting Flutter app $app_id in debug mode..."
 
-          flutter pub get # download test's dependencies
+          flutter pub get
 
           adb version
-          
           adb shell am force-stop "$app_id"
-
-          # clear log (to avoid picking up any earlier observatory announcements on re-runs)
           adb logcat -c
 
-          # start app on device
           adb shell am start -a android.intent.action.RUN -f 0x20000000 --ez enable-background-compilation true --ez enable-dart-profiling true --ez enable-checked-mode true --ez verify-entry-points true --ez start-paused true "$app_id/.MainActivity"
 
-          # wait for observatory startup on device and get port number
           obs_str=$( (adb logcat -v time &) | grep -m 1 "Observatory listening on")
           obs_port_str=$(echo "$obs_str" | grep -Eo '[^:]*$')
           obs_port=$(echo "$obs_port_str" | grep -Eo '^[0-9]+')
           obs_token=$(echo "$obs_port_str" | grep -Eo '\/.*\/$')
           echo Observatory on port "$obs_port"
 
-          # since only one local port seems to work on device farm, confirm that port has been released
-          # before re-using. This is so that multiple tests can be run on same device
           port_forwarded=$(adb forward --list| grep ${forwarded_port}) || true
           if [[ ! "$port_forwarded" == "" ]]; then
             echo "unforwarding ${forwarded_port}"
             adb forward --remove tcp:${forwarded_port}
           fi
 
-          # forward a local port to observatory port on device
           if [[ ! "$USERNAME" == 'device-farm' ]]; then
             forwarded_port=$(adb forward tcp:0 tcp:"$obs_port")
           else
@@ -134,10 +116,10 @@ phases:
           fi
           echo Local port "$forwarded_port" forwarded to observatory port "$obs_port"
 
-          # run test
           echo "Running integration test $test_path on app $app_id ..."
           export VM_SERVICE_URL=http://127.0.0.1:"$forwarded_port$obs_token"
           dart "$test_path"
+		  echo "custom_test_runner start out"
         }
 
       # Your test package is downloaded in $DEVICEFARM_TEST_PACKAGE_PATH so we first change directory to that path.
@@ -157,11 +139,9 @@ phases:
       - >-
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
-          # start ./script/test_android.sh --run-tests "$TESTS"
-          # bash ./script/test_android.sh --run-tests "$TESTS"
-          # track_test_phase_status
-          # echo "seviyorum"
+		  echo "custom_test_runner start"
           custom_test_runner
+		  echo "custom_test_runner end"
         fi
 
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "iOS" ];
