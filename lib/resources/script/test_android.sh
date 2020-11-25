@@ -73,6 +73,10 @@ run_tests() {
 # note: by-passes flutter drives dependency on Android SDK which requires installing the SDK
 #       (see https://github.com/flutter/flutter/issues/34909)
 custom_test_runner() {
+	echo "ben buradayim"
+}
+
+custom_test_runnerr() {
     local test_path=$1
     local forwarded_port=4723 # re-use appium server port if on device farm host
 
