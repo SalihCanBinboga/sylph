@@ -108,7 +108,7 @@ phases:
       - ls
       - cd ..
       - ls
-      - chmod -R 777 script
+      - sudo chmod -R 777 script
       - MAIN=test_driver/main.dart
       - TESTS='test_driver/main_test.dart'
       - >-
