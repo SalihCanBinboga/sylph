@@ -16,9 +16,7 @@ phases:
 
       # enter flutter app directory in Appium bundle
       - ls -la
-      - pwd
-      - cd bin
-      - ls -la
+      - which bash
       - cd flutter_app
       - ls -la
       - bash --version
@@ -44,9 +42,10 @@ phases:
         fi
 
       - mv flutter $HOME/flutter
-      - export PATH=$PATH:$HOME/flutter/bin:$HOME/flutter/bin/cache/dart-sdk/bin
+      - export PATH=$PATH:$HOME/flutter/bin:$HOME/flutter/bin/cache/dart-sdk/bin:$HOME/bin:/usr/bin:/usr/local/bin
       - export PATH="$PATH":"$HOME/.pub-cache/bin"
       - flutter doctor -v
+      - echo $BASH
 
   # The pre-test phase includes commands that setup your test environment.
   pre_test:
@@ -92,12 +91,12 @@ phases:
 #      - rm -f .packages
       
       - MAIN=test_driver/main.dart
-      - DRIVER_PATH=`pwd`
       - TESTS='test_driver/main_test.dart'
       - >-
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
-          $DRIVER_PATH/script/test_android.sh --run-tests "$TESTS"
+          cd script
+          bash test_android.sh --run-tests "$TESTS"
           track_test_phase_status
         fi
 
