@@ -99,7 +99,9 @@ phases:
       - >-
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
-          .$MAIN_DIR/flutter_app/script/test_android.sh --run-tests "$TESTS"
+          cd script
+          shell test_android.sh --run-tests "$TESTS"
+          cd ..
           track_test_phase_status
         fi
         
