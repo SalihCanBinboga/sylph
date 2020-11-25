@@ -1,11 +1,4 @@
-#!/usr/bin/env bash
-# Originally written by Maurice McCabe <mmcc007@gmail.com>, but placed in the public domain.
-
-# Run Flutter integration tests on android device (or emulator)
-
-# exit on error
 set -e
-#set -x
 
 main() {
   case $1 in
@@ -18,7 +11,6 @@ main() {
         ;;
     --run-tests)
         if [[ -z $2 ]]; then show_help; fi
-#        run_tests "$2" "$4" "$6"
         run_tests "$2"
         ;;
     --run-driver)
@@ -59,120 +51,74 @@ where:
 }
 
 run_tests() {
-  local test_paths=$1 # comma-delimited list of test paths
+  local test_paths=$1
 
-  while IFS=',' read -ra tests; do # parse comma-delimited list into real list of [tests]
+  while IFS=',' read -ra tests; do
     for test in "${tests[@]}"; do
-#        custom_test_runner "$test" "$2" "$3"
         custom_test_runner "$test"
     done
   done <<< "$test_paths"
 }
 
-# note: assumes debug apk installed on device
-# note: by-passes flutter drives dependency on Android SDK which requires installing the SDK
-#       (see https://github.com/flutter/flutter/issues/34909)
 custom_test_runner() {
     local test_path=$1
-    local forwarded_port=4723 # re-use appium server port if on device farm host
+    local forwarded_port=4723
 
     local app_id
     app_id=$(grep applicationId android/app/build.gradle | awk '{print $2}' | tr -d '"')
-#    local package
-#    package=app_id
-
-#    if [ -z "$2" ]
-#      then
-#        echo "null package name"
-#      else
-#        echo "package name: $2"
-#        package=$2
-#    fi
-#
-#    if [ -z "$3" ]
-#      then
-#        echo "null app id"
-#      else
-#        app_id=$3
-#    fi
 
     echo "Starting Flutter app $app_id in debug mode..."
 
-    flutter pub get # download test's dependencies
+    flutter pub get
 
     adb version
-
-    # stop app on device
-    # (if already running)
     adb shell am force-stop "$app_id"
-
-    # clear log (to avoid picking up any earlier observatory announcements on re-runs)
     adb logcat -c
-
-    # start app on device
+	
     adb shell am start -a android.intent.action.RUN -f 0x20000000 --ez enable-background-compilation true --ez enable-dart-profiling true --ez enable-checked-mode true --ez verify-entry-points true --ez start-paused true "$app_id/.MainActivity"
-
-    # wait for observatory startup on device and get port number
+	
     obs_str=$( (adb logcat -v time &) | grep -m 1 "Observatory listening on")
     obs_port_str=$(echo "$obs_str" | grep -Eo '[^:]*$')
     obs_port=$(echo "$obs_port_str" | grep -Eo '^[0-9]+')
     obs_token=$(echo "$obs_port_str" | grep -Eo '\/.*\/$')
     echo Observatory on port "$obs_port"
-
-    # since only one local port seems to work on device farm, confirm that port has been released
-    # before re-using. This is so that multiple tests can be run on same device
+	
     port_forwarded=$(adb forward --list| grep ${forwarded_port}) || true
     if [[ ! "$port_forwarded" == "" ]]; then
       echo "unforwarding ${forwarded_port}"
       adb forward --remove tcp:${forwarded_port}
     fi
-
-    # forward a local port to observatory port on device
+	
     if [[ ! "$USERNAME" == 'device-farm' ]]; then
       forwarded_port=$(adb forward tcp:0 tcp:"$obs_port")
     else
-      adb forward tcp:"$forwarded_port" tcp:"$obs_port" # if running locally
+      adb forward tcp:"$forwarded_port" tcp:"$obs_port"
     fi
     echo Local port "$forwarded_port" forwarded to observatory port "$obs_port"
-
-    # run test
+	
     echo "Running integration test $test_path on app $app_id ..."
     export VM_SERVICE_URL=http://127.0.0.1:"$forwarded_port$obs_token"
     dart "$test_path"
 }
 
-# get app id from .apk
-# (assumes a built .apk is available locally)
-# dev
 getAppIdFromApk() {
   local apk_path="$1"
 
-  # regular expression (required)
-  # shellcheck disable=SC2089
+
   local re="L.*/MainActivity.*;"
-  # sed substitute expression
-  # shellcheck disable=SC2089
   local se="s:L\(.*\)/MainActivity;:\1:p"
-  # tr expression
   local te=" / .";
 
   local app_id
-  # shellcheck disable=SC2089
   app_id="$(unzip -p "$apk_path" classes.dex | strings | grep -Eo "$re" | sed -n -e "$se" | tr $te)"
 
   echo "$app_id"
 }
 
-# note: requires android sdk be installed to get app identifier (eg, com.example.example)
-# not currently used
-#       (see https://github.com/flutter/flutter/issues/34909)
 run_no_build() {
   local test_main="$1"
-
-  # disable reporting analytics
+  
   flutter config --no-analytics
-
-  # update .packages in case last build was on a different flutter repo
   flutter packages get
 
   echo "Running flutter --verbose drive --no-build $test_main"

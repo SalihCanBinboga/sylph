@@ -15,32 +15,12 @@ phases:
       # - ln -s /usr/local/avm/versions/$APPIUM_VERSION/node_modules/.bin/appium  /usr/local/avm/versions/$APPIUM_VERSION/node_modules/appium/bin/appium.js
 
       # enter flutter app directory in Appium bundle
-      - ls
-      - cd bin
-      - ls
-      - cd ..
-      - cd local
-      - ls
-      - cd ..
-      - cd tests
-      - ls
-      - cd ..
-      - cd include
-      - ls
-      - cd ..
+      - ls -la
       - cd flutter_app
       - ls -la
-      - uname
-      - uname -a
-
-      # check for bash
       - bash --version
-
-      # env
-      #- env
-      #- whoami
-      #- groups
-      - echo "DEVICEFARM_APP_PATH=$DEVICEFARM_APP_PATH"
+      
+      - echo "DEVICEFARM_APP_PATH=${DEVICEFARM_APP_PATH}"
 
       # install flutter
       - echo "Install flutter"
@@ -71,6 +51,7 @@ phases:
       # We recommend starting appium server process in the background using the command below.
       # Appium server log will go to $DEVICEFARM_LOG_DIR directory.
       # The environment variables below will be auto-populated during run time.
+      - echo pre_test
 
 
   # The test phase includes commands that run your test suite execution.
@@ -100,19 +81,25 @@ phases:
       # and installed required libraries. You can run your test under $DEVICEFARM_TEST_PACKAGE_PATH
       - echo "Navigate to test package directory"
       - cd $DEVICEFARM_TEST_PACKAGE_PATH
-      - ls
+      - ls -la
+      
       - echo "Start Flutter integration test"
       - cd flutter_app
-      - ls
+      - ls -la
       - rm -f .packages
+      
       - cd script
+      - ls -la
+      - cd ..
+      
+      - MAIN_DIR=$DEVICEFARM_TEST_PACKAGE_PATH
       - MAIN=test_driver/main.dart
       - TESTS='test_driver/main_test.dart'
+      
       - >-
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
-          ls
-          bash test_android.sh --run-tests "$TESTS"
+          ./$MAIN_DIR/flutter_app/script/test_android.sh --run-tests "$TESTS"
           track_test_phase_status
         fi
         
@@ -125,9 +112,7 @@ phases:
           ./script/test_ios.sh --run-tests "$MAIN" "$TESTS"
           track_test_phase_status
         fi
-      - cd ..
         
-      # move any flutter crash logs to artifacts dir
       - >-
         for f in flutter_*.log; do
           if [ -e "$f" ]; then
@@ -136,6 +121,7 @@ phases:
           fi
         done
 
+      - echo $DEVICEFARM_LOG_DIR
       - ls -la $DEVICEFARM_LOG_DIR
       - echo done.
       - set_test_phase_exit_code
