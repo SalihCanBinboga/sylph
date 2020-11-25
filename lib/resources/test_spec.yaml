@@ -105,9 +105,9 @@ phases:
       - rm -f .packages
       - ls
       - cd script
-      - ls -l demo.sh
+      - ls -l test_android.sh
       - chmod +x test_android.sh
-      - ls -l demo.sh
+      - ls -l test_android.sh
       - cd ..
       - MAIN=test_driver/main.dart
       - TESTS='test_driver/main_test.dart'
