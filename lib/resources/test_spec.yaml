@@ -30,6 +30,7 @@ phases:
       - cd ..
       - cd flutter_app
       - ls -la
+      - uname
 
       # check for bash
       - bash --version
@@ -103,12 +104,6 @@ phases:
       - cd flutter_app
       - ls
       - rm -f .packages
-      - ls
-      - cd script
-      - ls -l test_android.sh
-      - chmod +x test_android.sh
-      - ls -l test_android.sh
-      - cd ..
       - MAIN=test_driver/main.dart
       - TESTS='test_driver/main_test.dart'
       - >-
@@ -117,7 +112,7 @@ phases:
           ./script/test_android.sh --run-tests "$TESTS"
           track_test_phase_status
         fi
-
+        
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "iOS" ];
         then
           ./script/test_ios.sh --unpack $DEVICEFARM_APP_PATH
