@@ -14,7 +14,7 @@ main() {
     --run-tests)
         if [[ -z $2 ]]; then show_help; fi
         run_tests "$2"
-		echo "Main Çalıştı: $2"
+		echo "Main Calisti: $2"
         ;;
     --run-driver)
         if [[ -z $2 ]]; then show_help; fi

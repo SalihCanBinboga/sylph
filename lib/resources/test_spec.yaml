@@ -60,7 +60,7 @@ phases:
           echo "script basladi"
           cd script
           pwd
-          ./test_android.sh --run-tests "$TESTS"
+          bash test_android.sh --run-tests "$TESTS"
           cd ..
           track_test_phase_status
           echo "script bitti"
