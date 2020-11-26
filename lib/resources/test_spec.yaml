@@ -54,7 +54,6 @@ phases:
         }
 
         custom_test_runner() {
-          local test_path=$1
           local forwarded_port=4723
           local app_id
           app_id=$(grep applicationId android/app/build.gradle | awk '' | tr -d '"')
@@ -80,9 +79,9 @@ phases:
             adb forward tcp:"$forwarded_port" tcp:"$obs_port"
           fi
           echo "Local port $forwarded_port forwarded to observatory port $obs_port"
-          echo "Running integration test $test_path on app $app_id ..."
+          echo "Running integration test test_driver/main_test.dart on app $app_id ..."
           export VM_SERVICE_URL=http://127.0.0.1:"$forwarded_port$obs_token"
-          dart "$test_path"
+          dart "test_driver/main_test.dart"
         }
         
       - echo "Navigate to test package directory"
@@ -97,10 +96,11 @@ phases:
       - >-
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
-          cd script
-          ./test_android.sh --run-tests "$TESTS"
-          track_test_phase_status
-          cd ..
+          custom_test_runner
+          # cd script
+          # ./test_android.sh --run-tests "$TESTS"
+          # track_test_phase_status
+          # cd ..
         fi
 
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "iOS" ];
