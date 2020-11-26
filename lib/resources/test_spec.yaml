@@ -97,7 +97,7 @@ phases:
 
       # - ls -la $DEVICEFARM_LOG_DIR
       - echo done.
-      # - set_test_phase_exit_code
+      - set_test_phase_exit_code
 
   # The post test phase includes are commands that are run after your tests are executed.
   post_test:
