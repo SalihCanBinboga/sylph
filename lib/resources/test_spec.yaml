@@ -30,7 +30,6 @@ phases:
 
   pre_test:
     commands:
-	  
 
   test:
     commands:
@@ -58,13 +57,13 @@ phases:
       - >-
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
-		  echo 'Script Calıstırıyorum'
-		  cd script
-		  pwd
+          echo "script başladı"
+          cd script
+          pwd
           ./test_android.sh --run-tests "$TESTS"
-		  cd ..
-		  echo 'Script Calıstırdım'
+          cd ..
           track_test_phase_status
+          echo "script bitti"
         fi
 
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "iOS" ];
