@@ -54,27 +54,30 @@ phases:
       - rm -f .packages
       - MAIN=test_driver/main.dart
       - TESTS='test_driver/main_test.dart'
-      - >-
-        if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
-        then
-          echo "script basladi"
-          cd script
-          pwd
-          bash test_android.sh --run-tests "$TESTS"
-          cd ..
-          track_test_phase_status
-          echo "script bitti"
-        fi
+      - flutter config --no-analytics
+      - flutter packages get
+      - flutter drive --verbose --no-build "$TESTS"
+      # - >-
+        # if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
+        # then
+          # echo "script basladi"
+          # cd script
+          # pwd
+          # bash test_android.sh --run-tests "$TESTS"
+          # cd ..
+          # track_test_phase_status
+          # echo "script bitti"
+        # fi
 
-        if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "iOS" ];
-        then
-          ./script/test_ios.sh --unpack $DEVICEFARM_APP_PATH
-          track_test_phase_status
-          ./script/test_ios.sh --dummy-symbols build_to_os.txt
-          track_test_phase_status
-          ./script/test_ios.sh --run-tests "$MAIN" "$TESTS"
-          track_test_phase_status
-        fi
+        # if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "iOS" ];
+        # then
+          # ./script/test_ios.sh --unpack $DEVICEFARM_APP_PATH
+          # track_test_phase_status
+          # ./script/test_ios.sh --dummy-symbols build_to_os.txt
+          # track_test_phase_status
+          # ./script/test_ios.sh --run-tests "$MAIN" "$TESTS"
+          # track_test_phase_status
+        # fi
 
       - >-
         for f in flutter_*.log; do
