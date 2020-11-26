@@ -57,7 +57,7 @@ phases:
       - >-
         if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         then
-          echo "script başladı"
+          echo "script basladi"
           cd script
           pwd
           ./test_android.sh --run-tests "$TESTS"
