@@ -53,11 +53,11 @@ phases:
       - cd flutter_app
       - ls -la
       - rm -f .packages
-      - MAIN=test_driver/main.dart
-      - TESTS='test_driver/main_test.dart'
-      - flutter config --no-analytics
-      - flutter packages get
-      - flutter drive --verbose --no-build "$MAIN"
+      # - MAIN=test_driver/main.dart
+      # - TESTS='test_driver/main_test.dart'
+      # - flutter config --no-analytics
+      # - flutter packages get
+      # - flutter drive --verbose --no-build "$MAIN"
       # - >-
         # if [ $DEVICEFARM_DEVICE_PLATFORM_NAME = "Android" ];
         # then
@@ -79,6 +79,42 @@ phases:
           # ./script/test_ios.sh --run-tests "$MAIN" "$TESTS"
           # track_test_phase_status
         # fi
+
+      - test_path="test_driver/main_test.dart"
+      - forwarded_port=4723
+      - echo "test_path: $test_path"
+      - app_id=$(grep applicationId android/app/build.gradle | awk '' | tr -d '"')
+
+      - echo "Starting Flutter app $app_id in debug mode..."
+      - flutter pub get
+      - adb version
+      - adb shell am force-stop "$app_id"
+      - adb logcat -c
+
+      - adb shell am start -a android.intent.action.RUN -f 0x20000000 --ez enable-background-compilation true --ez enable-dart-profiling true --ez enable-checked-mode true --ez verify-entry-points true --ez start-paused true "$app_id/.MainActivity"
+
+      - obs_str=$( (adb logcat -v time &) | grep -m 1 "Observatory listening on")
+      - obs_port_str=$(echo "$obs_str" | grep -Eo '[^:]*$')
+      - obs_port=$(echo "$obs_port_str" | grep -Eo '^[0-9]+')
+      - obs_token=$(echo "$obs_port_str" | grep -Eo '\/.*\/$')
+      - echo "Observatory on port $obs_port"
+      - port_forwarded=$(adb forward --list| grep ${forwarded_port}) || true
+      - >-
+        if [[ ! "$port_forwarded" == "" ]]; then
+          echo "unforwarding ${forwarded_port}"
+          adb forward --remove tcp:${forwarded_port}
+        fi
+      - >-
+        if [[ ! "$USERNAME" == 'device-farm' ]]; then
+          forwarded_port=$(adb forward tcp:0 tcp:"$obs_port")
+        else
+          adb forward tcp:"$forwarded_port" tcp:"$obs_port"
+        fi
+
+      - echo "Local port $forwarded_port forwarded to observatory port $obs_port"
+      - echo "Running integration test $test_path on app $app_id ..."
+      - export VM_SERVICE_URL="http://127.0.0.1:$forwarded_port$obs_token"
+      - dart "$test_path"
 
       - >-
         for f in flutter_*.log; do
