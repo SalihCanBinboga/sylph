@@ -86,16 +86,16 @@ phases:
           track_test_phase_status
         fi
 
-      # move any flutter crash logs to artifacts dir
-      # - >-
-        # for f in flutter_*.log; do
-          # if [ -e "$f" ]; then
-            # echo "Archiving $f to $DEVICEFARM_LOG_DIR"
-            # mv $f $DEVICEFARM_LOG_DIR
-          # fi
-        # done
+      move any flutter crash logs to artifacts dir
+      - >-
+        for f in flutter_*.log; do
+          if [ -e "$f" ]; then
+            echo "Archiving $f to $DEVICEFARM_LOG_DIR"
+            mv $f $DEVICEFARM_LOG_DIR
+          fi
+        done
 
-      # - ls -la $DEVICEFARM_LOG_DIR
+      - ls -la $DEVICEFARM_LOG_DIR
       - echo done.
       - set_test_phase_exit_code
 
