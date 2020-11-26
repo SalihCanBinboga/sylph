@@ -14,7 +14,7 @@ import 'device_farm.dart';
 import 'base/devices.dart';
 import 'base/utils.dart';
 
-const kDebugApkPath = 'build/app/outputs/apk/debug/app-debug.apk';
+const kDebugApkPath = 'build/app/outputs/flutter-apk/app.apk';
 const kDebugIpaPath = 'build/ios/Debug-iphoneos/Debug_Runner.ipa';
 
 /// Processes config file (subject to change).
@@ -202,7 +202,7 @@ Future<String> _buildUploadApp(String projectArn, DeviceType poolType,
     // Upload apk
     String debugApkPath = isEmpty(flavor)
         ? kDebugApkPath
-        : 'build/app/outputs/apk/$flavor/debug/app-$flavor-debug.apk';
+        : 'build/app/outputs/flutter-apk/app.apk';
     printStatus('Uploading debug android app: ${debugApkPath} ...');
     appArn = await uploadFile(projectArn, debugApkPath, 'ANDROID_APP');
   } else {

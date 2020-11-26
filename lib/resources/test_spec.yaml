@@ -51,6 +51,7 @@ phases:
       - cd $DEVICEFARM_TEST_PACKAGE_PATH
       - echo "Start Flutter integration test"
       - cd flutter_app
+      - ls -la
       - rm -f .packages
       - MAIN=test_driver/main.dart
       - TESTS='test_driver/main_test.dart'
