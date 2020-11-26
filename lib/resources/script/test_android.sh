@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 set -e
 
@@ -14,6 +14,7 @@ main() {
     --run-tests)
         if [[ -z $2 ]]; then show_help; fi
         run_tests "$2"
+		echo "Main Çalıştı: $2"
         ;;
     --run-driver)
         if [[ -z $2 ]]; then show_help; fi
@@ -54,6 +55,7 @@ where:
 
 run_tests() {
   local test_paths=$1
+  echo "Test Paths :$1"
 
   while IFS=',' read -ra tests; do
     for test in "${tests[@]}"; do
@@ -65,6 +67,7 @@ run_tests() {
 custom_test_runner() {
     local test_path=$1
     local forwarded_port=4723
+	echo "test_path: $test_path"
 
     local app_id
     app_id=$(grep applicationId android/app/build.gradle | awk '{print $2}' | tr -d '"')
