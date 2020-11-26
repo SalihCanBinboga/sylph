@@ -116,7 +116,7 @@ getAppIdFromApk() {
   local te=" / .";
 
   local app_id
-  app_id="$(unzip -p "$apk_path" classes.dex | strings | grep -Eo "$re" | sed -n -e "$se" | tr $te)"
+  app_id="$(unzip -p "$apk_path" classes.dex | strings | grep -Eo "$re" | sed -n -e "$se" | tr "$te")"
 
   echo "$app_id"
 }
