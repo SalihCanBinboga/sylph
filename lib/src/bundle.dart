@@ -34,9 +34,9 @@ String bundleFlutterTests(Config config, {String appDir = '.'}) {
   localPackageManager.installPackages(appDir);
 
   // Remove files not used (to reduce zip file size)
-  deleteDir('$defaultAppDir/build');
-  deleteDir('$defaultAppDir/ios/Flutter/Flutter.framework');
-  deleteDir('$defaultAppDir/ios/Flutter/App.framework');
+  //deleteDir('$defaultAppDir/build');
+  //deleteDir('$defaultAppDir/ios/Flutter/Flutter.framework');
+  //deleteDir('$defaultAppDir/ios/Flutter/App.framework');
 
   // Copy scripts to test bundle
   copyDir('$stagingDir/script', '$defaultAppDir/script');

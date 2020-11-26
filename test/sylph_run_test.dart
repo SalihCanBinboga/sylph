@@ -463,7 +463,7 @@ main() {
                   "upload": {
                     "arn":
                         "arn:aws:devicefarm:us-west-2:122621792560:upload:fake-project-id/94210aaa-5b94-4fe4-8535-80f2c6b8a847",
-                    "name": "app-debug.apk",
+                    "name": "app.apk",
                     "created": 1567929241.253,
                     "type": "ANDROID_APP",
                     "status": "INITIALIZED",
@@ -507,7 +507,7 @@ main() {
                   "upload": {
                     "arn":
                         "arn:aws:devicefarm:us-west-2:122621792560:upload:fake-project-id/94210aaa-5b94-4fe4-8535-80f2c6b8a847",
-                    "name": "app-debug.apk",
+                    "name": "app.apk",
                     "created": 1567929241.253,
                     "type": "ANDROID_APP",
                     "status": "INITIALIZED",
