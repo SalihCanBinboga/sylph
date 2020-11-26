@@ -86,7 +86,7 @@ phases:
           track_test_phase_status
         fi
 
-      move any flutter crash logs to artifacts dir
+      # move any flutter crash logs to artifacts dir
       - >-
         for f in flutter_*.log; do
           if [ -e "$f" ]; then
