@@ -1,5 +1,5 @@
-#!/bin/bash
-
+#!/usr/bin/env bash
+echo 'Running Script'
 set -e
 
 main() {

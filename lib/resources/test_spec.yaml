@@ -53,6 +53,7 @@ phases:
           return $TEST_PHASE_STATUS
         }
         
+      - which bash
       - echo "Navigate to test package directory"
       - cd $DEVICEFARM_TEST_PACKAGE_PATH
       
