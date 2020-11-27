@@ -83,7 +83,7 @@ phases:
       - test_path="test_driver/main_test.dart"
       - forwarded_port=4723
       - echo $test_path
-      - app_id=$(grep applicationId android/app/build.gradle | awk 'print $2' | tr -d '"')
+      - app_id=$(grep applicationId android/app/build.gradle | awk '{print $2}' | tr -d '')
 
       - echo "Starting Flutter app $app_id in debug mode..."
       - flutter pub get
