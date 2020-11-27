@@ -53,7 +53,7 @@ phases:
       - cd flutter_app
       - ls -la
       - rm -f .packages
-      # - MAIN=test_driver/main.dart
+      # - MAIN='test_driver/main.dart'
       # - TESTS='test_driver/main_test.dart'
       # - flutter config --no-analytics
       # - flutter packages get
@@ -82,7 +82,7 @@ phases:
 
       - test_path="test_driver/main_test.dart"
       - forwarded_port=4723
-      - echo "test_path: ${test_path}"
+      - echo "test_path: $test_path"
       - app_id=$(grep applicationId android/app/build.gradle | awk '' | tr -d '')
 
       - echo "Starting Flutter app ${app_id} in debug mode..."
