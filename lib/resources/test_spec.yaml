@@ -36,7 +36,7 @@ phases:
       - TEST_PHASE_STATUS=0
       - >-
         track_test_phase_status() {
-          local command_exit_code=$?
+          command_exit_code=$?
           if [ "$command_exit_code" != "0" ]; then
             echo "Most recent command failed with error code: $command_exit_code"
             TEST_PHASE_STATUS=$command_exit_code
@@ -83,7 +83,7 @@ phases:
       - test_path="test_driver/main_test.dart"
       - forwarded_port=4723
       - echo "test_path: ${test_path}"
-      - app_id=$(grep applicationId android/app/build.gradle | awk '' | tr -d '"')
+      - app_id=$(grep applicationId android/app/build.gradle | awk '' | tr -d '')
 
       - echo "Starting Flutter app ${app_id} in debug mode..."
       - flutter pub get
@@ -98,33 +98,33 @@ phases:
       - obs_port=$(echo "${obs_port_str}" | grep -Eo '^[0-9]+')
       - obs_token=$(echo "${obs_port_str}" | grep -Eo '\/.*\/$')
       - echo "Observatory on port ${obs_port}"
-      # - port_forwarded=$(adb forward --list| grep ${forwarded_port}) || true
-      # - >-
-        # if [[ ! "$port_forwarded" == "" ]]; then
-          # echo "unforwarding ${forwarded_port}"
-          # adb forward --remove tcp:${forwarded_port}
-        # fi
-      # - >-
-        # if [[ ! "$USERNAME" == 'device-farm' ]]; then
-          # forwarded_port=$(adb forward tcp:0 tcp:"$obs_port")
-        # else
-          # adb forward tcp:"$forwarded_port" tcp:"$obs_port"
-        # fi
+      - port_forwarded=$(adb forward --list| grep ${forwarded_port}) || true
+      - >-
+        if [ ! "$port_forwarded" = "" ]; then
+          echo "unforwarding ${forwarded_port}"
+          adb forward --remove tcp:${forwarded_port}
+        fi
+      - >-
+        if [ ! "$USERNAME" = 'device-farm' ]; then
+          forwarded_port=$(adb forward tcp:0 tcp:"$obs_port")
+        else
+          adb forward tcp:"$forwarded_port" tcp:"$obs_port"
+        fi
 
-      # - echo "Local port $forwarded_port forwarded to observatory port $obs_port"
-      # - echo "Running integration test $test_path on app $app_id ..."
-      # - export VM_SERVICE_URL="http://127.0.0.1:$forwarded_port$obs_token"
-      # - dart "$test_path"
+      - echo "Local port $forwarded_port forwarded to observatory port $obs_port"
+      - echo "Running integration test $test_path on app $app_id ..."
+      - export VM_SERVICE_URL="http://127.0.0.1:$forwarded_port$obs_token"
+      - dart "$test_path"
 
       - >-
         for f in flutter_*.log; do
           if [ -e "$f" ]; then
             echo "Archiving $f to $DEVICEFARM_LOG_DIR"
-            mv $f $DEVICEFARM_LOG_DIR
+            mv "$f" "$DEVICEFARM_LOG_DIR"
           fi
         done
 
-      - ls -la $DEVICEFARM_LOG_DIR
+      - ls -la "$DEVICEFARM_LOG_DIR"
       - echo 'done.'
       - set_test_phase_exit_code
 
