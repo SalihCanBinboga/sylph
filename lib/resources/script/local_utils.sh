@@ -74,15 +74,15 @@ EOF
 build_debug_ipa() {
     local flavor=$1
 
-#    echo "Building debug .ipa for upload to Device Farm..."
+echo "Generating debug archive... ----0"
 
-    flutter packages get > /dev/null # in case building from a different flutter repo
+    flutter packages get > /dev/null
 
-    local build_config # designates the debug, profile or release build config when archiving
-    # note: build config is expected to use a conventional format described below.
-    #       eg, 'Debug' or 'Debug flavorname'
+    local build_config
     local app_name="Runner"
     local scheme
+echo "Generating debug archive... --0"
+	
     if [[ -z "$flavor" ]]; then
         echo "Running flutter build ios -t test_driver/main.dart --debug..."
         flutter build ios -t test_driver/main.dart --debug
@@ -103,6 +103,8 @@ build_debug_ipa() {
 
     # remove the debug .ipa disabler
     remove_archive_disabler
+	
+echo "Generating debug archive... 0"
 
     local default_debug_ipa_name='Debug_Runner.ipa'
     local ios_build_dir="$PWD/build/ios/Debug-iphoneos"
